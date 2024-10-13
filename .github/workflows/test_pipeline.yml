@@ -45,20 +45,25 @@ jobs:
           message: 'commit [${{ github.sha }}](https://github.com/${{github.repository}}/commit/${{github.sha}}) broke the build :('
       - name: Build succeeded
         if: ${{ success() }}
-        run: echo "Should run this!!!"
-  # tag_release:
-  #   needs: [a_test_job, simple_build_pipeline]
-  #   runs-on: ubuntu-20.04
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - name: Bump version and push tag
-  #       if: ${{ github.event_name == 'push' }}
-  #       uses: anothrNick/github-tag-action@1.71.0
-  #       env:
-  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  #         WITH_V: true
-  #         PRERELEASE: true
-  #         DEFAULT_BUMP: patch
-  #     - name: This should be skipped
-  #       if: ${{ !contains(join(github.event.commits.*.message), '#skip')}}
-  #       run: echo "Did I skip?"
+        uses: stegzilla/discord-notify@v2
+        with:
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
+          colour: '#00b700'
+          title: Build succeeded!
+          message: 'A new version of Pokedex deployed to https://amazing-pokedex.onrender.com/'
+  tag_release:
+    needs: [a_test_job, simple_build_pipeline]
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Bump version and push tag
+        if: ${{ github.event_name == 'push' }}
+        uses: anothrNick/github-tag-action@1.71.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          PRERELEASE: true
+          DEFAULT_BUMP: patch
+      - name: This should be skipped
+        if: ${{ !contains(join(github.event.commits.*.message), '#skip')}}
+        run: echo "Did I skip?"
