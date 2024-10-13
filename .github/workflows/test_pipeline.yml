@@ -45,7 +45,7 @@ jobs:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
           colour: '#e00000'
           title: Build failed
-          message: 'commit ${{ github.sha }} broke the build :('
+          message: 'commit [${{ github.sha }}](https://github.com/${{github.repository}}/commit/${{github.sha}}) broke the build :('
       - name: Build succeeded
         if: ${{ success() }}
         run: echo "Should not run this"
