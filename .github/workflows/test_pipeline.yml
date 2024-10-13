@@ -40,16 +40,15 @@ jobs:
         run: npm run build -- --fail-this-build
       - name: Build failed
         if: ${{ failure() }}
-        # env:
-        #   COMMIT_ID: ${{ join(github.event.commits.*.id, ', ') }}
+        env:
+          COMMIT_ID: ${{ join(github.event.commits.*.id, ', ') }}
         #   COMMIT_URL: ${{ join(github.event.commits.*.url, ', ') }}
         uses: stegzilla/discord-notify@v2
         with:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
           colour: '#e00000'
           title: Build failed
-          message: Webhook test
-        # run: echo "commit [$COMMIT_ID]($COMMIT_URL) broke the build :("
+          message: 'commit $COMMIT_ID broke the build :('
       - name: Build succeeded
         if: ${{ success() }}
         run: echo "Should not run this"
