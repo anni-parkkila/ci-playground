@@ -16,7 +16,7 @@ jobs:
         uses: jtalk/url-health-check-action@v4
         with:
           # Check the following URLs one by one sequentially
-          url: https://amazing-pokedex.onrender.com/
+          url: https://amazing-pokedex.onrender.com/not-available
           # Fail this action after this many failed attempts
           max-attempts: 3 # Optional, defaults to 1
           # Delay between retries
@@ -24,3 +24,6 @@ jobs:
       - name: Health check passed
         if: ${{success()}}
         run: echo "Pokedex health check passed"
+      - name: Health check failed
+        if: ${{failure()}}
+        run: echo "Pokedex health check failed"
