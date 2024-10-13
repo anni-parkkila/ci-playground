@@ -24,7 +24,7 @@ jobs:
         run: echo "$COMMIT_MESSAGES"
       - name: commit url
         env:
-          COMMIT_URL: ${{ join(github.event.commits.*.url, ', ') }}
+          COMMIT_URL: ${{ join(github.event.commits.*.id, ', ') }}
         run: echo "commit $COMMIT_URL broke the build :("
   # simple_build_pipeline:
   #   runs-on: ubuntu-20.04
