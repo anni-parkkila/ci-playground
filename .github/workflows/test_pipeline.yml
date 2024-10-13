@@ -40,21 +40,22 @@ jobs:
         run: npm run build -- --fail-this-build
       - name: Build failed
         if: ${{ failure() }}
-        # uses: rjstone/discord-webhook-notify@v1
-        env:
-          COMMIT_ID: ${{ join(github.event.commits.*.id, ', ') }}
-          COMMIT_URL: ${{ join(github.event.commits.*.url, ', ') }}
-        # with:
-        #   webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
-        #   severity: error
-        #   text: Build failed
-        #   description: 'commit [$COMMIT_ID]($COMMIT_URL) broke the build :('
-        run: echo "commit [$COMMIT_ID]($COMMIT_URL) broke the build :("
+        # env:
+        #   COMMIT_ID: ${{ join(github.event.commits.*.id, ', ') }}
+        #   COMMIT_URL: ${{ join(github.event.commits.*.url, ', ') }}
+        uses: rjstone/discord-webhook-notify@v1
+        with:
+          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          severity: error
+          text: Build failed
+          description: 'commit broke the build :('
+          details: Webhook test
+        # run: echo "commit [$COMMIT_ID]($COMMIT_URL) broke the build :("
       - name: Build succeeded
         if: ${{ success() }}
         run: echo "Should not run this"
   tag_release:
-    needs: [a_test_job]
+    needs: [a_test_job, simple_build_pipeline]
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
