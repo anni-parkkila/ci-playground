@@ -23,48 +23,48 @@ jobs:
           COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
         run: echo "$COMMIT_MESSAGES"
       - name: commit url
-        env:
-          COMMIT_ID: ${{ join(github.event.commits.*.id, ', ') }}
-          COMMIT_URL: ${{ join(github.event.commits.*.url, ', ') }}
-        run: echo "commit url [$COMMIT_ID]($COMMIT_URL)"
-  simple_build_pipeline:
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - name: Install dependencies
-        run: npm install
-      - name: Build
-        run: npm run build -- --fail-this-build
-      - name: Build failed
-        if: ${{ failure() }}
-        env:
-          COMMIT_ID: ${{ join(github.event.commits.*.id, ', ') }}
+        # env:
+        #   COMMIT_ID: ${{ join(github.event.commits.*.id, ', ') }}
         #   COMMIT_URL: ${{ join(github.event.commits.*.url, ', ') }}
-        uses: stegzilla/discord-notify@v2
-        with:
-          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
-          colour: '#e00000'
-          title: Build failed
-          message: 'commit $COMMIT_ID broke the build :('
-      - name: Build succeeded
-        if: ${{ success() }}
-        run: echo "Should not run this"
-  tag_release:
-    needs: [a_test_job, simple_build_pipeline]
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v4
-      - name: Bump version and push tag
-        if: ${{ github.event_name == 'push' }}
-        uses: anothrNick/github-tag-action@1.71.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: true
-          PRERELEASE: true
-          DEFAULT_BUMP: patch
-      - name: This should be skipped
-        if: ${{ !contains(join(github.event.commits.*.message), '#skip')}}
-        run: echo "Did I skip?"
+        run: echo "commit ${{ github.event.commits.id }}"
+  # simple_build_pipeline:
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: '20'
+  #     - name: Install dependencies
+  #       run: npm install
+  #     - name: Build
+  #       run: npm run build -- --fail-this-build
+  #     - name: Build failed
+  #       if: ${{ failure() }}
+  #       env:
+  #         COMMIT_ID: ${{ join(github.event.commits.*.id, ', ') }}
+  #       #   COMMIT_URL: ${{ join(github.event.commits.*.url, ', ') }}
+  #       uses: stegzilla/discord-notify@v2
+  #       with:
+  #         webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
+  #         colour: '#e00000'
+  #         title: Build failed
+  #         message: "commit ${{ join(github.event.commits.*.id, ', ') }} broke the build :("
+  #     - name: Build succeeded
+  #       if: ${{ success() }}
+  #       run: echo "Should not run this"
+  # tag_release:
+  #   needs: [a_test_job, simple_build_pipeline]
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - name: Bump version and push tag
+  #       if: ${{ github.event_name == 'push' }}
+  #       uses: anothrNick/github-tag-action@1.71.0
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         WITH_V: true
+  #         PRERELEASE: true
+  #         DEFAULT_BUMP: patch
+  #     - name: This should be skipped
+  #       if: ${{ !contains(join(github.event.commits.*.message), '#skip')}}
+  #       run: echo "Did I skip?"
