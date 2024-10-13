@@ -9,7 +9,7 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  simple-periodic_health_check:
+  simple_periodic_health_check:
     runs-on: ubuntu-20.04
     steps:
       - name: Check the deployed Pokedex URL
@@ -20,4 +20,7 @@ jobs:
           # Fail this action after this many failed attempts
           max-attempts: 3 # Optional, defaults to 1
           # Delay between retries
-          retry-delay: 5s # Optional, only applicable to max-attempts > 1
+          retry-delay: 10 # Optional, only applicable to max-attempts > 1
+      - name: Health check passed
+        if: ${{success()}}
+        run: echo "Pokedex health check passed"
