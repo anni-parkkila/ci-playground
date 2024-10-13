@@ -26,7 +26,7 @@ jobs:
         # env:
         #   COMMIT_ID: ${{ join(github.event.commits.*.id, ', ') }}
         #   COMMIT_URL: ${{ join(github.event.commits.*.url, ', ') }}
-        run: echo "commit ${{ github.event.commits.id }}"
+        run: echo "commit ${{ github.sha }} \n url https://github.com/${{github.repository}}/commit/${{github.sha}}"
   # simple_build_pipeline:
   #   runs-on: ubuntu-20.04
   #   steps:
