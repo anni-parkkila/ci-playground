@@ -22,6 +22,34 @@ jobs:
         env:
           COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
         run: echo "$COMMIT_MESSAGES"
+      - name: commit url
+        env:
+          COMMIT_URL: ${{ toJson(github.event.commits.*.url) }}
+        run: echo "commit $COMMIT_URL broke the build :("
+  # simple_build_pipeline:
+  #   runs-on: ubuntu-20.04
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v4
+  #       with:
+  #         node-version: '20'
+  #     - name: Install dependencies
+  #       run: npm install
+  #     - name: Check style
+  #       run: npm run eslint
+  #     - name: Build
+  #       run: npm run build
+  #     - name: Build failed
+  #       if: ${{ failure() }}
+  #       uses: rjstone/discord-webhook-notify@v1
+  #       env:
+  #         COMMIT_URL: ${{ toJson(github.event.commits.*.url) }}
+  #       with:
+  #         webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+  #         severity: error
+  #         text: Build failed
+  #         description: 'commit $COMMIT_URL broke the build :('
+
   tag_release:
     needs: [a_test_job]
     runs-on: ubuntu-20.04
