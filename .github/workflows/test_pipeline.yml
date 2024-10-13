@@ -45,7 +45,7 @@ jobs:
         #   COMMIT_URL: ${{ join(github.event.commits.*.url, ', ') }}
         uses: stegzilla/discord-notify@v2
         with:
-          webhookUrl: ${{ secrets.DISCORD_WEBHOOK }}
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
           colour: '#e00000'
           title: Build failed
           message: Webhook test
