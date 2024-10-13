@@ -20,7 +20,7 @@ jobs:
           # Fail this action after this many failed attempts
           max-attempts: 3 # Optional, defaults to 1
           # Delay between retries
-          retry-delay: 10 # Optional, only applicable to max-attempts > 1
+          retry-delay: 10s # Optional, only applicable to max-attempts > 1
       - name: Health check passed
         if: ${{success()}}
         run: echo "Pokedex health check passed"
