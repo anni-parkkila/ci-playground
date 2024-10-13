@@ -34,12 +34,9 @@ jobs:
       - name: Install dependencies
         run: npm install
       - name: Build
-        run: npm run build -- --fail-this-build
+        run: npm run build
       - name: Build failed
         if: ${{ failure() }}
-        # env:
-        #   COMMIT_ID: ${{ join(github.event.commits.*.id, ', ') }}
-        # #   COMMIT_URL: ${{ join(github.event.commits.*.url, ', ') }}
         uses: stegzilla/discord-notify@v2
         with:
           webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
@@ -48,7 +45,7 @@ jobs:
           message: 'commit [${{ github.sha }}](https://github.com/${{github.repository}}/commit/${{github.sha}}) broke the build :('
       - name: Build succeeded
         if: ${{ success() }}
-        run: echo "Should not run this"
+        run: echo "Should run this!!!"
   # tag_release:
   #   needs: [a_test_job, simple_build_pipeline]
   #   runs-on: ubuntu-20.04
