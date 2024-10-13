@@ -37,4 +37,4 @@ jobs:
           DEFAULT_BUMP: patch
       - name: This should be skipped
         if: ${{ !contains(join(github.event.commits.*.message), '#skip')}}
-        run: echo "Did I skip?""
+        run: echo "Did I skip?"
