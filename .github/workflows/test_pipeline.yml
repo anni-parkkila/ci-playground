@@ -23,35 +23,32 @@ jobs:
           COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
         run: echo "$COMMIT_MESSAGES"
       - name: commit url
+        run: echo "commit ${{ github.sha }} \n url https://github.com/${{github.repository}}/commit/${{github.sha}}"
+  simple_build_pipeline:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install
+      - name: Build
+        run: npm run build -- --fail-this-build
+      - name: Build failed
+        if: ${{ failure() }}
         # env:
         #   COMMIT_ID: ${{ join(github.event.commits.*.id, ', ') }}
-        #   COMMIT_URL: ${{ join(github.event.commits.*.url, ', ') }}
-        run: echo "commit ${{ github.sha }} \n url https://github.com/${{github.repository}}/commit/${{github.sha}}"
-  # simple_build_pipeline:
-  #   runs-on: ubuntu-20.04
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: actions/setup-node@v4
-  #       with:
-  #         node-version: '20'
-  #     - name: Install dependencies
-  #       run: npm install
-  #     - name: Build
-  #       run: npm run build -- --fail-this-build
-  #     - name: Build failed
-  #       if: ${{ failure() }}
-  #       env:
-  #         COMMIT_ID: ${{ join(github.event.commits.*.id, ', ') }}
-  #       #   COMMIT_URL: ${{ join(github.event.commits.*.url, ', ') }}
-  #       uses: stegzilla/discord-notify@v2
-  #       with:
-  #         webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
-  #         colour: '#e00000'
-  #         title: Build failed
-  #         message: "commit ${{ join(github.event.commits.*.id, ', ') }} broke the build :("
-  #     - name: Build succeeded
-  #       if: ${{ success() }}
-  #       run: echo "Should not run this"
+        # #   COMMIT_URL: ${{ join(github.event.commits.*.url, ', ') }}
+        uses: stegzilla/discord-notify@v2
+        with:
+          webhook_url: ${{ secrets.DISCORD_WEBHOOK }}
+          colour: '#e00000'
+          title: Build failed
+          message: 'commit ${{ github.sha }} broke the build :('
+      - name: Build succeeded
+        if: ${{ success() }}
+        run: echo "Should not run this"
   # tag_release:
   #   needs: [a_test_job, simple_build_pipeline]
   #   runs-on: ubuntu-20.04
