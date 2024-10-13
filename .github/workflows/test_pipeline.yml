@@ -35,3 +35,6 @@ jobs:
           WITH_V: true
           PRERELEASE: true
           DEFAULT_BUMP: patch
+      - name: This should be skipped
+        if: ${{ !contains(join(github.event.commits.*.message), '#skip')}}
+        run: echo "Did I skip?""
